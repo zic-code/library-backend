@@ -9,7 +9,7 @@ const { authenticateJWT } = require("./middleware/auth")
 const bookRoutes = require("./routes/books")
 const myBookRoutes = require("./routes/mybooks");
 const reviewRoutes = require("./routes/reviews");
-
+const DATABASE_URL = process.env.DATABASE_URL;
 
 const app = express();
 
@@ -42,7 +42,7 @@ app.use(function (err, req, res, next) {
 });
 
 app.listen(5000, () => {
-  console.log("Server is running on http://localhost:5000")
+  console.log(`Server is running on ${DATABASE_URL}`)
 })
 
 module.exports = app;
