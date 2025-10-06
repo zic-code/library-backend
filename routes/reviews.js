@@ -3,6 +3,53 @@ const router = new express.Router();
 const db = require("../db"); // pg client
 const { ensureLoggedIn } = require("../middleware/auth"); // 로그인 체크용 미들웨어
 
+
+// reviews.router.js
+router.get("/", async (req, res, next) => {
+  try {
+    // 1) 파라미터 보정
+    let limit = Number(req.query.limit);
+    if (!Number.isInteger(limit) || limit <= 0) limit = 6;
+    if (limit > 50) limit = 50; // 상한
+    const excludeSelf = String(req.query.excludeSelf).toLowerCase() === "true";
+    const uid = res.locals.user?.id;
+
+    // 2) 동적 WHERE/params
+    const vals = [];
+    let where = "";
+    if (excludeSelf && uid) {
+      vals.push(uid);
+      where = `WHERE r.user_id <> $${vals.length}`;
+    }
+    vals.push(limit);
+
+    // 3) 쿼리
+    const sql = `
+      SELECT r.id,
+             r.book_id,
+             r.user_id,
+             u.username,
+             r.rating,
+             r.comment,
+             r.created_at
+      FROM reviews AS r
+      JOIN users  AS u ON u.id = r.user_id
+      ${where}
+      ORDER BY r.created_at DESC
+      LIMIT $${vals.length}
+    `;
+    const rows = await db.query(sql, vals);
+
+    // 4) 응답
+    return res.json({ reviews: rows.rows });
+  } catch (err) {
+    return next(err); // 앱 공통 에러 핸들러로
+  }
+});
+
+
+
+
 /** GET /reviews/:book_id
  * 특정 책에 대한 모든 리뷰 조회
  */

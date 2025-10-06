@@ -3,17 +3,25 @@
 require("dotenv").config()
 const express = require("express");
 const cors = require("cors");
+
+// DB CONNECT
+const db = require("./db")
+
 const authRoutes = require("./routes/auth");
 const UserRoutes = require("./routes/users")
 const { authenticateJWT } = require("./middleware/auth")
 const bookRoutes = require("./routes/books")
 const myBookRoutes = require("./routes/mybooks");
 const reviewRoutes = require("./routes/reviews");
-const DATABASE_URL = process.env.DATABASE_URL;
+const homeRoutes = require('./routes/home');
+// const DATABASE_URL = process.env.DATABASE_URL;
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:5173", "https://library-frontend-xxxx.onrender.com"], // 프론트 주소들
+  credentials: true
+}));
 app.use(express.json());
 app.use(authenticateJWT);
 
@@ -22,6 +30,7 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use('/home', homeRoutes);
 app.use("/auth", authRoutes);
 app.use("/users", UserRoutes);
 app.use("/books", bookRoutes);
@@ -42,7 +51,7 @@ app.use(function (err, req, res, next) {
 });
 
 app.listen(5000, () => {
-  console.log(`Server is running on ${DATABASE_URL}`)
+  console.log(`Server is running on ${db.connectionParameters.database}`)
 })
 
 module.exports = app;
