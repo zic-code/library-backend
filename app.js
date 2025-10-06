@@ -14,12 +14,12 @@ const bookRoutes = require("./routes/books")
 const myBookRoutes = require("./routes/mybooks");
 const reviewRoutes = require("./routes/reviews");
 const homeRoutes = require('./routes/home');
-// const DATABASE_URL = process.env.DATABASE_URL;
+
 
 const app = express();
 
 app.use(cors({
-  origin: ["http://localhost:5173", "https://library-frontend-xxxx.onrender.com"], // 프론트 주소들
+  origin: ["https://library-frontend-pv9u.onrender.com"], 
   credentials: true
 }));
 app.use(express.json());
