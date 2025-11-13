@@ -61,7 +61,7 @@ PostgreSQL (Database)
 
 Below is a short demo video showing the main features of the Library Tracker App in action:
 
-https://github.com/zic-code/library-backend/assets/demo.mp4
+![demo](https://github.com/user-attachments/assets/10e438e5-a1dd-4f9b-ad53-0e76df4ac138)
 
 Demonstrates login, book search, add, update, and review —
 showing full CRUD and REST API integration between React and Node.js.
